@@ -1,0 +1,9 @@
+C:\dev\Telldus\TelldusLib\bin\Debug\configlet.html
+C:\dev\Telldus\TelldusLib\bin\Debug\configuration.xml
+C:\dev\Telldus\TelldusLib\bin\Debug\logo.png
+C:\dev\Telldus\TelldusLib\bin\Debug\[Content_Types].xml
+C:\dev\Telldus\TelldusLib\bin\Debug\Tellstick.dll
+C:\dev\Telldus\TelldusLib\bin\Debug\Tellstick.pdb
+C:\dev\Telldus\TelldusLib\obj\Debug\Tellstick.dll
+C:\dev\Telldus\TelldusLib\obj\Debug\Tellstick.pdb
+C:\dev\Telldus\TelldusLib\obj\Debug\Tellstick.csprojResolveAssemblyReference.cache

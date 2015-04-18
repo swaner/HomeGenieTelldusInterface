@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+    <Default Extension="so" ContentType="" />
+    <Default Extension="dll" ContentType="" />
+    <Default Extension="xml" ContentType="" />
+    <Default Extension="TXT" ContentType="" />
+    <Default Extension="txt" ContentType="" />
+    <Default Extension="html" ContentType="" />
+    <Default Extension="png" ContentType="" />
+    <Default Extension="mdb" ContentType="" />
+</Types>
