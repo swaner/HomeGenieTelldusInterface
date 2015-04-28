@@ -3,8 +3,8 @@ HomeGenie / MIG interface driver for TellStick. Tested on TellStick Duo.
 
 <h3>Installation</h3>
 <b>Install telldus-core</b><br />
-This interface requires telldus-core libraries. To install these in Windows, Mac or Linux download telldus center from http://www.telldus.se/products/nativesoftware.
-For raspberry pi follow step 4 - 7 in this tutorial (please note last comment): https://blogg.itslav.nu/?p=875. Here is another more official tutorial I haven't tried myself: http://elinux.org/R-Pi_Tellstick_core.
+This interface requires telldus-core libraries. To install these in Windows, Mac or Linux download telldus center from http://www.telldus.se/products/nativesoftware. <br />
+For raspberry pi follow step 4 - 7 in this tutorial (please note last comment): https://blogg.itslav.nu/?p=875. <br /> Here is another more official tutorial I haven't tried myself: http://elinux.org/R-Pi_Tellstick_core.
 
 <b>Install interface to homegenie</b><br />
 When the telldus-core libraries are installed you can install the interface in homegenie: <br />
