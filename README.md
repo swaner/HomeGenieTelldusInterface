@@ -8,9 +8,11 @@ For raspberry pi follow step 4 - 7 in this tutorial (please note last comment): 
 
 <b>Install interface to homegenie</b><br />
 When the telldus-core libraries are installed you can install the interface in homegenie: <br />
-1. Download the zip file located in the root directory <a href="https://github.com/swaner/HomeGenieTelldusInterface/raw/master/Tellstick_0_9.zip">here</a>.<br />
-2. Open HomeGenie and goto Configure->Interfaces.<br />
-3. Press Import Interface Driver and locate the file downloaded in step 1.<br />
+<ol>
+<li>Download the zip file located in the root directory <a href="https://github.com/swaner/HomeGenieTelldusInterface/raw/master/Tellstick_0_9.zip">here</a>.</li>
+<li>Open HomeGenie and goto Configure->Interfaces.</li>
+<li>Press Import Interface Driver and locate the file downloaded in step 1.</li>
+</ol>
 
 <h3>Features</h3>
 Currently the interface supports the following:
