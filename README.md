@@ -2,9 +2,27 @@
 HomeGenie / MIG interface driver for TellStick. Tested on TellStick Duo.
 
 <h3>Installation</h3>
-<b>Install telldus-core</b><br />
-This interface requires telldus-core libraries. To install these in Windows, Mac or Linux download telldus center from http://www.telldus.se/products/nativesoftware. <br />
-For raspberry pi follow step 4 - 7 in this tutorial (please note last comment): https://blogg.itslav.nu/?p=875. <br /> Here is another more official tutorial I haven't tried myself: http://elinux.org/R-Pi_Tellstick_core.
+<h2>Install telldus-core</h2><br />
+This interface requires telldus-core libraries. To install these in Windows, Mac or Linux follow instructions below.
+<b>Windows</b>
+Download telldus center from http://www.telldus.se/products/nativesoftware. <br />
+<b>Raspberry pi</b><br />
+SSH into the pi and run the following commands: <br />
+Update apt-get: 
+sudo nano /etc/apt/sources.list.d/telldus.list <br />
+deb-src http://download.telldus.com/debian/ stable main <br />
+Download the key: wget http://download.telldus.se/debian/telldus-public.key <br />
+Add the key: sudo apt-key add telldus-public.key <br />
+Run a update in order to add the telldus sources: sudo apt-get update <br />
+This should already be installed: sudo apt-get install build-essential <br />
+Install dependencies: sudo apt-get build-dep telldus-core <br />
+Even more dependencies: sudo apt-get install cmake libconfuse-dev libftdi-dev help2man <br />
+Make a temporary directory to compile in: mkdir -p ~/telldus-temp <br />
+cd ~/telldus-temp<br />
+Download the source: sudo apt-get –-compile source telldus-core <br />
+Install: sudo dpkg -–install *.deb <br />
+Done, if you have any sensors to test you can do so by typing: tdtool -l <br />
+The above steps are fetched from the swedish blogpost: https://blogg.itslav.nu/?p=875. <br /> Here is another more official tutorial I haven't tried myself: http://elinux.org/R-Pi_Tellstick_core.
 
 <b>Install interface to homegenie</b><br />
 When the telldus-core libraries are installed you can install the interface in homegenie: <br />
