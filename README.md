@@ -9,13 +9,14 @@ Download telldus center from http://www.telldus.se/products/nativesoftware.
 #####Raspberry pi
 SSH into the pi and run the following commands:
 Update apt-get:
-```sudo nano /etc/apt/sources.list.d/telldus.list```
-```deb-src http://download.telldus.com/debian/ stable main```
-        <p>
+
+    >sudo nano /etc/apt/sources.list.d/telldus.list
+    >deb-src http://download.telldus.com/debian/ stable main
             
-Download the key:<span class="code">wget http://download.telldus.se/debian/telldus-public.key 
-            </span>
-        </p>
+Download the key:
+
+>    wget http://download.telldus.se/debian/telldus-public.key 
+
         <p>
             Add the key: <span class="code">sudo apt-key add telldus-public.key </span>
         </p>
