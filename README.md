@@ -1,30 +1,16 @@
-<style>
-.code {
-    font: italic bold 12px Georgia, serif;
-    display: inline;
-}
-    .code:before {
-         content:"\A"; white-space:pre;
-    }
-</style>
 # MIG-TelldusTellstick interface
 HomeGenie / MIG interface driver for TellStick. Tested on TellStick Duo.
 
-<div id="installation">
-<h3>Installation</h3>
-<h4>Install telldus-core</h4>
+###Installation
+####Install telldus-core
 This interface requires telldus-core libraries. To install these in Windows, Mac or Linux follow instructions below.
-<h5>Windows</h5>
-<p>
+#####Windows
 Download telldus center from http://www.telldus.se/products/nativesoftware.
-</p>
-<h5>Raspberry pi</h5>
+#####Raspberry pi
 SSH into the pi and run the following commands:
-    <p>
 Update apt-get:
 ```sudo nano /etc/apt/sources.list.d/telldus.list```
 ```deb-src http://download.telldus.com/debian/ stable main```
-<p/>
         <p>
             
 Download the key:<span class="code">wget http://download.telldus.se/debian/telldus-public.key 
@@ -58,10 +44,9 @@ Download the key:<span class="code">wget http://download.telldus.se/debian/telld
         <p>
             Done, if you have any sensors to test you can now do so by typing: <span class="code">tdtool -l </span>
             </p>
-  <p>          
+
 The above steps are fetched from the swedish blogpost: https://blogg.itslav.nu/?p=875. <br /> Here is another more official tutorial I haven't tried myself: http://elinux.org/R-Pi_Tellstick_core.
-        </p>
-</div>
+        
 
 <h4>Install interface to homegenie</h4>
 When the telldus-core libraries are installed you can install the interface in homegenie: <br />
