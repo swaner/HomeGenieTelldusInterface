@@ -27,7 +27,7 @@ Run a update in order to add the telldus sources:
     sudo apt-get update
 
 This should already be installed:
-    
+
     sudo apt-get install build-essential
 
 Install dependencies:
@@ -50,7 +50,7 @@ Install:
 
     sudo dpkg -–install *.deb
         
-Done, if you have any sensors to test you can now do so by typing:
+Done, you can now plug in your telldus usb device, if you have any sensors to test you can list the devices by typing:
 
     tdtool -l
 
