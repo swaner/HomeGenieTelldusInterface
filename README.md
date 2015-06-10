@@ -35,6 +35,7 @@ Install dependencies:
     sudo apt-get build-dep telldus-core
 
 Even more dependencies:
+
     sudo apt-get install cmake libconfuse-dev libftdi-dev help2man
         
 Make a temporary directory to compile in:
