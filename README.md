@@ -10,46 +10,52 @@ Download telldus center from http://www.telldus.se/products/nativesoftware.
 SSH into the pi and run the following commands:
 Update apt-get:
 
-    >sudo nano /etc/apt/sources.list.d/telldus.list
-    >deb-src http://download.telldus.com/debian/ stable main
+    sudo nano /etc/apt/sources.list.d/telldus.list
+    deb-src http://download.telldus.com/debian/ stable main
             
 Download the key:
 
->    wget http://download.telldus.se/debian/telldus-public.key 
+    wget http://download.telldus.se/debian/telldus-public.key 
 
-        <p>
-            Add the key: <span class="code">sudo apt-key add telldus-public.key </span>
-        </p>
-        <p>
-            Run a update in order to add the telldus sources: <span class="code">sudo apt-get update </span>
-        </p>
-        <p>
-            This should already be installed: <span class="code">sudo apt-get install build-essential </span>
-        </p>
-        <p>
-            Install dependencies: <span class="code">sudo apt-get build-dep telldus-core </code>
-        </p>
-        <p>
-            Even more dependencies: <span class="code">sudo apt-get install cmake libconfuse-dev libftdi-dev help2man </span>
-        </p>
-        <p>
-            Make a temporary directory to compile in: <span class="code">mkdir -p ~/telldus-temp </span>
-            <span class="code">cd ~/telldus-temp</span>
-        </p>
-        <p>
-            Download the source: <span class="code">sudo apt-get –-compile source telldus-core </span>
-        </p>
-        <p>
-            Install: <span class="code">sudo dpkg -–install *.deb </span>
-        </p>
-        <p>
-            Done, if you have any sensors to test you can now do so by typing: <span class="code">tdtool -l </span>
-            </p>
+Add the key:
+
+    sudo apt-key add telldus-public.key
+
+Run a update in order to add the telldus sources:
+
+    sudo apt-get update
+
+This should already be installed:
+    
+    sudo apt-get install build-essential
+
+Install dependencies:
+
+    sudo apt-get build-dep telldus-core
+
+Even more dependencies:
+    sudo apt-get install cmake libconfuse-dev libftdi-dev help2man
+        
+Make a temporary directory to compile in:
+
+    mkdir -p ~/telldus-temp
+    cd ~/telldus-temp
+        
+Download the source:
+
+    sudo apt-get –-compile source telldus-core
+
+Install: 
+
+    sudo dpkg -–install *.deb
+        
+Done, if you have any sensors to test you can now do so by typing:
+
+    tdtool -l
 
 The above steps are fetched from the swedish blogpost: https://blogg.itslav.nu/?p=875. <br /> Here is another more official tutorial I haven't tried myself: http://elinux.org/R-Pi_Tellstick_core.
         
-
-<h4>Install interface to homegenie</h4>
+####Install interface to homegenie
 When the telldus-core libraries are installed you can install the interface in homegenie: <br />
 <ol>
 <li>Download the zip file located in the root directory <a href="https://github.com/swaner/HomeGenieTelldusInterface/raw/master/Tellstick_0_9.zip">here</a>.</li>
