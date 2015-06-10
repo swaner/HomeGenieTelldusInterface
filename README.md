@@ -1,5 +1,5 @@
 # MIG-TelldusTellstick interface
-HomeGenie / MIG interface driver for TellStick. Tested on TellStick Duo.
+HomeGenie / MIG interface driver for TellStick. Tested on TellStick Duo and Raspberry Pi 2, Windows 8 and Raspberry Pi.
 
 ###Installation
 ####Install telldus-core
