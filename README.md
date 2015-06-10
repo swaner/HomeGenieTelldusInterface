@@ -22,8 +22,8 @@ Download telldus center from http://www.telldus.se/products/nativesoftware.
 SSH into the pi and run the following commands:
     <p>
 Update apt-get:
-<span class="code">sudo nano /etc/apt/sources.list.d/telldus.list</span>
-<span class="code">deb-src http://download.telldus.com/debian/ stable main</span>
+```sudo nano /etc/apt/sources.list.d/telldus.list```
+```deb-src http://download.telldus.com/debian/ stable main```
 <p/>
         <p>
             
