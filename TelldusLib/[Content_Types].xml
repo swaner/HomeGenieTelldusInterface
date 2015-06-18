@@ -4,7 +4,6 @@
     <Default Extension="dll" ContentType="" />
     <Default Extension="xml" ContentType="" />
     <Default Extension="TXT" ContentType="" />
-    <Default Extension="txt" ContentType="" />
     <Default Extension="html" ContentType="" />
     <Default Extension="png" ContentType="" />
     <Default Extension="mdb" ContentType="" />
