@@ -1,0 +1,9 @@
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/bin/Debug/configlet.html
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/bin/Debug/configuration.xml
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/bin/Debug/logo.png
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/bin/Debug/[Content_Types].xml
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/bin/Debug/Tellstick.dll.mdb
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/bin/Debug/Tellstick.dll
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/obj/Debug/Tellstick.dll
+/home/gene/Scrivania/G-Labs/Development/Repositories/github-genielabs/HomeGenieTelldusInterface/TelldusLib/obj/Debug/Tellstick.dll.mdb

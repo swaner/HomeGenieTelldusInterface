@@ -1,20 +1,29 @@
-﻿using MIG.Interfaces.HomeAutomation.Commons;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TelldusLib;
+using MIG.Config;
 
 namespace MIG.Interfaces.HomeAutomation
 {
-    public class Tellstick : MIGInterface
+    public class Tellstick : MigInterface
     {
+        public static string Event_Node_Description = "Tellstick Node";
+        public static string Event_Sensor_Description = "Tellstick Sensor";
+
         TellstickController controller;
         List<InterfaceModule> interfaceModules = new List<InterfaceModule>();
+
         public Tellstick()
         {
             controller = new TellstickController();
         }
+
+        #region MIG Interface members
+
+        public event InterfaceModulesChangedEventHandler InterfaceModulesChanged;
+        public event InterfacePropertyChangedEventHandler InterfacePropertyChanged;
 
         public string Domain
         {
@@ -31,72 +40,12 @@ namespace MIG.Interfaces.HomeAutomation
             return interfaceModules;
         }
 
-        private ModuleTypes GetDeviceType(string protocol)
+        public List<Option> Options { get; set; }
+
+        public void OnSetOption(Option option)
         {
-            if (protocol.IndexOf("dimmer") > -1)
-                return ModuleTypes.Dimmer;
-            if (protocol.IndexOf("switch") > -1)
-                return ModuleTypes.Switch;
-            return ModuleTypes.Generic;
-        }
-
-        public List<MIGServiceConfiguration.Interface.Option> Options
-        {
-            get;
-            set;
-        }
-
-        public event Action<InterfacePropertyChangedAction> InterfacePropertyChangedAction;
-
-        public event Action<InterfaceModulesChangedAction> InterfaceModulesChangedAction;
-
-        public object InterfaceControl(MIGInterfaceCommand command)
-        {
-            string returnValue = "";
-            bool raisePropertyChanged = false;
-            string parameterPath = "Status.Level";
-            string raiseParameter = "";
-            switch (command.Command)
-            {
-                case "Control.On":
-                    controller.TurnOn(int.Parse(command.NodeId));
-                    raisePropertyChanged = true;
-                    raiseParameter = "1";
-                    break;
-                case "Control.Off":
-                    raisePropertyChanged = true;
-                    controller.TurnOff(int.Parse(command.NodeId));
-                    raiseParameter = "0";
-                    break;
-                case "Control.Level":
-                    raisePropertyChanged = true;
-                    raiseParameter = (double.Parse(command.GetOption(0)) / 100).ToString();
-                    controller.Dim(int.Parse(command.NodeId), (int)Math.Round(double.Parse(command.GetOption(0))));
-                    break;
-                default:
-                    Console.WriteLine("TS:" + command.Command + " | " + command.NodeId);
-                    break;
-            }
-
-            if (raisePropertyChanged)
-            {
-                try
-                {
-                    //ZWaveNode node = _controller.GetDevice ((byte)int.Parse (nodeid));
-                    InterfacePropertyChangedAction(new InterfacePropertyChangedAction()
-                    {
-                        Domain = this.Domain,
-                        SourceId = command.NodeId,
-                        SourceType = "Tellstick Node",
-                        Path = parameterPath,
-                        Value = raiseParameter
-                    });
-                }
-                catch
-                {
-                }
-            }
-            return returnValue;
+            if (IsEnabled)
+                Connect();
         }
 
         public bool IsConnected
@@ -114,23 +63,16 @@ namespace MIG.Interfaces.HomeAutomation
             {
                 var id = controller.GetDeviceId(i);
                 interfaceModules.Add(new InterfaceModule
-                {
-                    Domain = Domain,
-                    Address = id.ToString(),
-                    Description = controller.GetName(id),
-                    ModuleType = GetDeviceType(controller.GetProtocol(id))
-                });
+                    {
+                        Domain = Domain,
+                        Address = id.ToString(),
+                        Description = controller.GetName(id),
+                        ModuleType = GetDeviceType(controller.GetProtocol(id))
+                    });
                 var lastCommand = controller.LastSentCommand(id, 0);
                 if (lastCommand > 0)
                 {
-                    InterfacePropertyChangedAction(new InterfacePropertyChangedAction()
-                    {
-                        Domain = this.Domain,
-                        SourceId = id.ToString(),
-                        SourceType = "Tellstick Node",
-                        Path = ModuleParameters.MODPAR_STATUS_LEVEL,
-                        Value = lastCommand
-                    });
+                    OnInterfacePropertyChanged(this.GetDomain(), id.ToString(), Event_Node_Description, ModuleEvents.Status_Level, lastCommand);
                 }
             }
 
@@ -140,31 +82,110 @@ namespace MIG.Interfaces.HomeAutomation
             return true;
         }
 
+        public void Disconnect()
+        {
+            controller.Close();
+        }
+
+        public bool IsDevicePresent()
+        {
+            return true;
+        }
+
+        public bool IsEnabled { get; set; }
+
+        public object InterfaceControl(MigInterfaceCommand command)
+        {
+            string returnValue = "";
+            bool raisePropertyChanged = false;
+            string parameterPath = "Status.Level";
+            string raiseParameter = "";
+            switch (command.Command)
+            {
+                case "Control.On":
+                    controller.TurnOn(int.Parse(command.Address));
+                    raisePropertyChanged = true;
+                    raiseParameter = "1";
+                    break;
+                case "Control.Off":
+                    raisePropertyChanged = true;
+                    controller.TurnOff(int.Parse(command.Address));
+                    raiseParameter = "0";
+                    break;
+                case "Control.Level":
+                    raisePropertyChanged = true;
+                    raiseParameter = (double.Parse(command.GetOption(0)) / 100).ToString();
+                    controller.Dim(int.Parse(command.Address), (int)Math.Round(double.Parse(command.GetOption(0))));
+                    break;
+                default:
+                    Console.WriteLine("TS:" + command.Command + " | " + command.Address);
+                    break;
+            }
+
+            if (raisePropertyChanged)
+            {
+                try
+                {
+                    OnInterfacePropertyChanged(this.GetDomain(), command.Address, Event_Node_Description, parameterPath, raiseParameter);
+                }
+                catch
+                {
+                }
+            }
+            return returnValue;
+        }
+
+        #endregion
+
+        #region Events
+
+        protected virtual void OnInterfaceModulesChanged(string domain)
+        {
+            if (InterfaceModulesChanged != null)
+            {
+                var args = new InterfaceModulesChangedEventArgs(domain);
+                InterfaceModulesChanged(this, args);
+            }
+        }
+
+        protected virtual void OnInterfacePropertyChanged(string domain, string source, string description, string propertyPath, object propertyValue)
+        {
+            if (InterfacePropertyChanged != null)
+            {
+                var args = new InterfacePropertyChangedEventArgs(domain, source, description, propertyPath, propertyValue);
+                InterfacePropertyChanged(this, args);
+            }
+        }
+
+        #endregion
+
+        private ModuleTypes GetDeviceType(string protocol)
+        {
+            if (protocol.IndexOf("dimmer") > -1)
+                return ModuleTypes.Dimmer;
+            if (protocol.IndexOf("switch") > -1)
+                return ModuleTypes.Switch;
+            return ModuleTypes.Generic;
+        }
+
         private int OnDeviceUpdated(int deviceId, int method, string data, int callbackId, object obj, UnmanagedException ex)
         {
-            var path = ModuleParameters.MODPAR_STATUS_LEVEL;
+            var path = ModuleEvents.Status_Level;
             int value = 0;
             if (method == (int)TelldusLib.Command.TURNON)
             {
-                path = ModuleParameters.MODPAR_STATUS_LEVEL;
+                path = ModuleEvents.Status_Level;
                 value = 1;
             }
             else if (method == (int)TelldusLib.Command.TURNOFF)
             {
-                path = ModuleParameters.MODPAR_STATUS_LEVEL;
+                path = ModuleEvents.Status_Level;
                 value = 0;
             }
 
             var module = interfaceModules.FirstOrDefault(i => i.Address == deviceId.ToString());
 
-            InterfacePropertyChangedAction(new InterfacePropertyChangedAction()
-            {
-                Domain = Domain,
-                SourceId = module.Address,
-                SourceType = "Tellstick Sensor",
-                Path = path,
-                Value = value
-            });
+            OnInterfacePropertyChanged(this.GetDomain(), module.Address, Event_Sensor_Description, path, value);
 
             return 1;
         }
@@ -187,44 +208,36 @@ namespace MIG.Interfaces.HomeAutomation
                 };
                 interfaceModules.Add(module);
 
-                InterfaceModulesChangedAction(new InterfaceModulesChangedAction
-                {
-                    Domain = Domain
-                });
+                OnInterfaceModulesChanged(this.GetDomain());
             }
 
-            var path = ModuleParameters.MODPAR_STATUS_LEVEL;
+            var path = ModuleEvents.Status_Level;
             if (dataType == (int)TelldusLib.DataType.TEMPERATURE)
-                path = ModuleParameters.MODPAR_SENSOR_TEMPERATURE;
+                path = ModuleEvents.Sensor_Temperature;
             else if (dataType == (int)TelldusLib.DataType.HUMIDITY)
-                path = ModuleParameters.MODPAR_SENSOR_HUMIDITY;
+                path = ModuleEvents.Sensor_Humidity;
 
-            InterfacePropertyChangedAction(new InterfacePropertyChangedAction()
-            {
-                Domain = Domain,
-                SourceId = module.Address,
-                SourceType = "Tellstick Sensor",
-                Path = path,
-                Value = val
-            });
-
-            //Sensor.Temperature
-            //MODPAR_SENSOR_TEMPERATURE
+            OnInterfacePropertyChanged(this.GetDomain(), module.Address, Event_Sensor_Description, path, val);
 
             return 1;
         }
 
-        public void Disconnect()
+        public static class ModuleEvents
         {
-            controller.Close();
+
+            public static string Status_Level =
+                "Status.Level";
+            public static string Sensor_Temperature =
+                "Sensor.Temperature";
+            public static string Sensor_Luminance =
+                "Sensor.Luminance";
+            public static string Sensor_Humidity =
+                "Sensor.Humidity";
+            public static string Sensor_DoorWindow =
+                "Sensor.DoorWindow";
+            public static string Sensor_Tamper =
+                "Sensor.Tamper";
         }
 
-        public bool IsDevicePresent()
-        {
-            return true;
-        }
-
-
-        public bool IsEnabled { get; set; }
     }
 }
