@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TelldusLib;
 using MIG.Config;
 
@@ -113,9 +112,17 @@ namespace MIG.Interfaces.HomeAutomation
                     raiseParameter = "0";
                     break;
                 case "Control.Level":
-                    raisePropertyChanged = true;
-                    raiseParameter = (double.Parse(command.GetOption(0)) / 100).ToString();
+                    //raisePropertyChanged = true;
+                    //raiseParameter = (double.Parse(command.GetOption(0))).ToString();
                     controller.Dim(int.Parse(command.Address), (int)Math.Round(double.Parse(command.GetOption(0))));
+                    break;
+                case "Control.Toogle":
+                    raisePropertyChanged = true;
+                    var lastCommand = controller.LastSentCommand(int.Parse(command.Address), 0);
+                    if(lastCommand == (int)Command.TURNOFF)
+                        controller.TurnOn(int.Parse(command.Address));
+                    else
+                        controller.TurnOff(int.Parse(command.Address));
                     break;
                 default:
                     Console.WriteLine("TS:" + command.Command + " | " + command.Address);
