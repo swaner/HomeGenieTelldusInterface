@@ -118,7 +118,6 @@ namespace MIG.Interfaces.HomeAutomation
                     if(dimValue == 0)
                     { 
                         controller.TurnOff(int.Parse(command.Address));
-                        raiseParameter = "0";
                     }
                     else
                     { 
@@ -193,7 +192,7 @@ namespace MIG.Interfaces.HomeAutomation
         private int OnDeviceUpdated(int deviceId, int method, string data, int callbackId, object obj, UnmanagedException ex)
         {
             var path = ModuleEvents.Status_Level;
-            int value = 0;
+            int? value = null;
             if (method == (int)TelldusLib.Command.TURNON)
             {
                 path = ModuleEvents.Status_Level;
@@ -205,9 +204,11 @@ namespace MIG.Interfaces.HomeAutomation
                 value = 0;
             }
 
-            var module = interfaceModules.FirstOrDefault(i => i.Address == deviceId.ToString());
-
-            OnInterfacePropertyChanged(this.GetDomain(), module.Address, Event_Sensor_Description, path, value);
+            if (value.HasValue)
+            { 
+                var module = interfaceModules.FirstOrDefault(i => i.Address == deviceId.ToString());
+                OnInterfacePropertyChanged(this.GetDomain(), module.Address, Event_Sensor_Description, path, value);
+            }
 
             return 1;
         }
