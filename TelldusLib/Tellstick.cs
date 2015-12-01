@@ -114,9 +114,18 @@ namespace MIG.Interfaces.HomeAutomation
                 case "Control.Level":
                     //raisePropertyChanged = true;
                     //raiseParameter = (double.Parse(command.GetOption(0))).ToString();
-                    controller.Dim(int.Parse(command.Address), (int)Math.Round(double.Parse(command.GetOption(0))));
+                    var dimValue = double.Parse(command.GetOption(0));
+                    if(dimValue == 0)
+                    { 
+                        controller.TurnOff(int.Parse(command.Address));
+                        raiseParameter = "0";
+                    }
+                    else
+                    { 
+                        controller.Dim(int.Parse(command.Address), (int)Math.Round(dimValue));
+                    }
                     break;
-                case "Control.Toogle":
+                case "Control.Toggle":
                     raisePropertyChanged = true;
                     var lastCommand = controller.LastSentCommand(int.Parse(command.Address), 0);
                     if (lastCommand == (int)Command.TURNOFF)
