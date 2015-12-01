@@ -119,10 +119,16 @@ namespace MIG.Interfaces.HomeAutomation
                 case "Control.Toogle":
                     raisePropertyChanged = true;
                     var lastCommand = controller.LastSentCommand(int.Parse(command.Address), 0);
-                    if(lastCommand == (int)Command.TURNOFF)
+                    if (lastCommand == (int)Command.TURNOFF)
+                    { 
                         controller.TurnOn(int.Parse(command.Address));
+                        raiseParameter = "1";
+                    }
                     else
+                    {
                         controller.TurnOff(int.Parse(command.Address));
+                        raiseParameter = "0";
+                    }
                     break;
                 default:
                     Console.WriteLine("TS:" + command.Command + " | " + command.Address);
