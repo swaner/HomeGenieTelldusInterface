@@ -112,22 +112,27 @@ namespace MIG.Interfaces.HomeAutomation
                     raiseParameter = "0";
                     break;
                 case "Control.Level":
-                    //raisePropertyChanged = true;
-                    //raiseParameter = (double.Parse(command.GetOption(0))).ToString();
                     var dimValue = double.Parse(command.GetOption(0));
                     if(dimValue == 0)
                     { 
                         controller.TurnOff(int.Parse(command.Address));
+                        raisePropertyChanged = true;
+                        raiseParameter = "0";
                     }
                     else
                     { 
                         controller.Dim(int.Parse(command.Address), (int)Math.Round(dimValue));
+                        raisePropertyChanged = true;
+                        raiseParameter = command.GetOption(0);
                     }
                     break;
                 case "Control.Toggle":
                     raisePropertyChanged = true;
-                    var lastCommand = controller.LastSentCommand(int.Parse(command.Address), 0);
-                    if (lastCommand == (int)Command.TURNOFF)
+                    var lastCommand = lastValue[command.Address]; // controller.LastSentCommand(int.Parse(command.Address), 0);
+                    if(lastCommand == null)
+                        lastValue.Add(command.Address, "0");
+
+                    if (lastValue[command.Address] == "0")
                     { 
                         controller.TurnOn(int.Parse(command.Address));
                         raiseParameter = "1";
@@ -137,6 +142,7 @@ namespace MIG.Interfaces.HomeAutomation
                         controller.TurnOff(int.Parse(command.Address));
                         raiseParameter = "0";
                     }
+                    lastValue[command.Address] = raiseParameter;
                     break;
                 default:
                     Console.WriteLine("TS:" + command.Command + " | " + command.Address);
@@ -156,6 +162,7 @@ namespace MIG.Interfaces.HomeAutomation
             return returnValue;
         }
 
+        private static Dictionary<string, string> lastValue = new Dictionary<string, string>();  
         #endregion
 
         #region Events
