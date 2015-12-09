@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TelldusLib;
 using MIG.Config;
@@ -68,10 +69,10 @@ namespace MIG.Interfaces.HomeAutomation
                         Description = controller.GetName(id),
                         ModuleType = GetDeviceType(controller.GetProtocol(id))
                     });
-                var lastCommand = controller.LastSentCommand(id, 0);
-                if (lastCommand > 0)
+                var lastCommand = controller.LastSentCommand(id, (int)(Command.DIM | Command.TURNON | Command.TURNOFF));
+                if (lastCommand != (int)Command.TURNOFF)
                 {
-                    OnInterfacePropertyChanged(this.GetDomain(), id.ToString(), Event_Node_Description, ModuleEvents.Status_Level, lastCommand);
+                    OnInterfacePropertyChanged(this.GetDomain(), id.ToString(), Event_Node_Description, ModuleEvents.Status_Level, "1");
                 }
             }
 
@@ -123,17 +124,14 @@ namespace MIG.Interfaces.HomeAutomation
                     { 
                         controller.Dim(int.Parse(command.Address), (int)Math.Round(dimValue));
                         raisePropertyChanged = true;
-                        raiseParameter = command.GetOption(0);
+                        raiseParameter = (dimValue / 100.0).ToString(CultureInfo.InvariantCulture);
                     }
                     break;
                 case "Control.Toggle":
-                    raisePropertyChanged = true;
-                    var lastCommand = lastValue[command.Address]; // controller.LastSentCommand(int.Parse(command.Address), 0);
-                    if(lastCommand == null)
-                        lastValue.Add(command.Address, "0");
+                    int status = controller.LastSentCommand(int.Parse(command.Address), (int)(Command.DIM | Command.TURNON | Command.TURNOFF));
 
-                    if (lastValue[command.Address] == "0")
-                    { 
+                    if (status == (int)Command.TURNOFF)
+                    {
                         controller.TurnOn(int.Parse(command.Address));
                         raiseParameter = "1";
                     }
@@ -142,7 +140,7 @@ namespace MIG.Interfaces.HomeAutomation
                         controller.TurnOff(int.Parse(command.Address));
                         raiseParameter = "0";
                     }
-                    lastValue[command.Address] = raiseParameter;
+                    raisePropertyChanged = true;
                     break;
                 default:
                     Console.WriteLine("TS:" + command.Command + " | " + command.Address);
@@ -155,43 +153,41 @@ namespace MIG.Interfaces.HomeAutomation
                 {
                     OnInterfacePropertyChanged(this.GetDomain(), command.Address, Event_Node_Description, parameterPath, raiseParameter);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Console.WriteLine("Exception catched on OnInterfacePropertyChanged. Message: {0}", ex.Message);
                 }
             }
             return returnValue;
         }
 
-        private static Dictionary<string, string> lastValue = new Dictionary<string, string>();  
         #endregion
 
         #region Events
 
         protected virtual void OnInterfaceModulesChanged(string domain)
         {
-            if (InterfaceModulesChanged != null)
-            {
-                var args = new InterfaceModulesChangedEventArgs(domain);
-                InterfaceModulesChanged(this, args);
-            }
+            if (InterfaceModulesChanged == null) return;
+
+            var args = new InterfaceModulesChangedEventArgs(domain);
+            InterfaceModulesChanged(this, args);
         }
 
         protected virtual void OnInterfacePropertyChanged(string domain, string source, string description, string propertyPath, object propertyValue)
         {
-            if (InterfacePropertyChanged != null)
-            {
-                var args = new InterfacePropertyChangedEventArgs(domain, source, description, propertyPath, propertyValue);
-                InterfacePropertyChanged(this, args);
-            }
+            if (InterfacePropertyChanged == null) return;
+
+            var args = new InterfacePropertyChangedEventArgs(domain, source, description, propertyPath, propertyValue);
+            InterfacePropertyChanged(this, args);
         }
 
         #endregion
 
         private ModuleTypes GetDeviceType(string protocol)
         {
-            if (protocol.IndexOf("dimmer") > -1)
+            if (protocol.IndexOf("dimmer", StringComparison.Ordinal) > -1)
                 return ModuleTypes.Dimmer;
-            if (protocol.IndexOf("switch") > -1)
+            if (protocol.IndexOf("switch", StringComparison.Ordinal) > -1)
                 return ModuleTypes.Switch;
             return ModuleTypes.Generic;
         }
@@ -254,7 +250,6 @@ namespace MIG.Interfaces.HomeAutomation
 
         public static class ModuleEvents
         {
-
             public static string Status_Level =
                 "Status.Level";
             public static string Sensor_Temperature =
@@ -268,6 +263,5 @@ namespace MIG.Interfaces.HomeAutomation
             public static string Sensor_Tamper =
                 "Sensor.Tamper";
         }
-
     }
 }
